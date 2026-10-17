@@ -1,0 +1,44 @@
+{
+    "best_model_name": "Linear Regression",
+    "features": [
+        "attendance",
+        "internal_marks",
+        "assignment_marks",
+        "previous_marks",
+        "study_hours",
+        "activity_score"
+    ],
+    "target": "final_marks",
+    "dataset_samples": 1200,
+    "train_samples": 960,
+    "test_samples": 240,
+    "linear_regression": {
+        "model_name": "Linear Regression",
+        "mae": 2.2342,
+        "mse": 8.2122,
+        "rmse": 2.8657,
+        "r2_score": 0.9192
+    },
+    "random_forest": {
+        "model_name": "Random Forest Regressor",
+        "mae": 2.4549,
+        "mse": 9.8927,
+        "rmse": 3.1453,
+        "r2_score": 0.9026
+    },
+    "best_model_metrics": {
+        "model_name": "Linear Regression",
+        "mae": 2.2342,
+        "mse": 8.2122,
+        "rmse": 2.8657,
+        "r2_score": 0.9192
+    },
+    "feature_importances": {
+        "attendance": 0.1401,
+        "internal_marks": 0.2717,
+        "assignment_marks": 0.2435,
+        "previous_marks": 0.2511,
+        "study_hours": 0.9996,
+        "activity_score": 0.0543
+    }
+}
