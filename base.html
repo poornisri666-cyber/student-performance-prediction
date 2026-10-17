@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Student Performance Prediction System{% endblock %} | BSc AI Project</title>
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center fw-bold fs-5" href="{{ url_for('index') }}">
+                <div class="brand-icon-wrapper me-2">
+                    <i class="bi bi-mortarboard-fill fs-4 text-white"></i>
+                </div>
+                <span>EduPredict <span class="badge bg-white text-primary fs-7 ms-1">AI</span></span>
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {{ 'active' if request.endpoint == 'index' else '' }}" href="{{ url_for('index') }}">
+                            <i class="bi bi-house-door me-1"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {{ 'active' if request.endpoint == 'predict' else '' }}" href="{{ url_for('predict') }}">
+                            <i class="bi bi-cpu me-1"></i> Predict Performance
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {{ 'active' if request.endpoint == 'dashboard' else '' }}" href="{{ url_for('dashboard') }}">
+                            <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {{ 'active' if request.endpoint in ['students', 'student_detail'] else '' }}" href="{{ url_for('students') }}">
+                            <i class="bi bi-people me-1"></i> Student Records
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {{ 'active' if request.endpoint == 'about' else '' }}" href="{{ url_for('about') }}">
+                            <i class="bi bi-info-circle me-1"></i> About Project
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center ms-lg-3 mt-2 mt-lg-0">
+                    {% if model_loaded %}
+                        <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill d-flex align-items-center">
+                            <span class="status-dot bg-success me-1"></span> ML Engine Active
+                        </span>
+                    {% else %}
+                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-pill d-flex align-items-center">
+                            <span class="status-dot bg-danger me-1"></span> Model Offline
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages Container -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm d-flex align-items-center" role="alert">
+                        {% if category == 'success' %}
+                            <i class="bi bi-check-circle-fill fs-5 me-2"></i>
+                        {% elif category == 'danger' %}
+                            <i class="bi bi-exclamation-triangle-fill fs-5 me-2"></i>
+                        {% elif category == 'warning' %}
+                            <i class="bi bi-exclamation-circle-fill fs-5 me-2"></i>
+                        {% else %}
+                            <i class="bi bi-info-circle-fill fs-5 me-2"></i>
+                        {% endif %}
+                        <div class="flex-grow-1">{{ message }}</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% if error_title %}
+            <div class="card shadow-sm border-0 my-5 text-center p-5">
+                <div class="card-body">
+                    <i class="bi bi-exclamation-octagon text-danger display-1 mb-3"></i>
+                    <h2 class="fw-bold">{{ error_title }}</h2>
+                    <p class="text-muted lead">{{ error_message }}</p>
+                    <a href="{{ url_for('index') }}" class="btn btn-primary mt-3 px-4">
+                        <i class="bi bi-house me-1"></i> Return Home
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow-1 pb-5">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-white pt-5 pb-4 mt-auto">
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-5">
+                    <h5 class="fw-bold text-white d-flex align-items-center mb-3">
+                        <i class="bi bi-mortarboard-fill text-primary me-2"></i>
+                        Student Performance Prediction System
+                    </h5>
+                    <p class="text-light-50 small mb-3">
+                        A full-stack Machine Learning web application engineered for early academic risk detection, data-driven grade forecasting, and targeted intervention strategies in higher education.
+                    </p>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <span class="badge bg-secondary">Python 3.13</span>
+                        <span class="badge bg-secondary">Flask</span>
+                        <span class="badge bg-secondary">Scikit-Learn</span>
+                        <span class="badge bg-secondary">SQLite</span>
+                        <span class="badge bg-secondary">Chart.js</span>
+                        <span class="badge bg-secondary">Bootstrap 5</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <h6 class="text-white-50 text-uppercase fw-semibold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled small space-y-2">
+                        <li class="mb-2"><a href="{{ url_for('index') }}" class="text-light text-decoration-none hover-primary"><i class="bi bi-chevron-right me-1 text-primary"></i> Home</a></li>
+                        <li class="mb-2"><a href="{{ url_for('predict') }}" class="text-light text-decoration-none hover-primary"><i class="bi bi-chevron-right me-1 text-primary"></i> Predict Marks</a></li>
+                        <li class="mb-2"><a href="{{ url_for('dashboard') }}" class="text-light text-decoration-none hover-primary"><i class="bi bi-chevron-right me-1 text-primary"></i> Admin Dashboard</a></li>
+                        <li class="mb-2"><a href="{{ url_for('students') }}" class="text-light text-decoration-none hover-primary"><i class="bi bi-chevron-right me-1 text-primary"></i> Records Directory</a></li>
+                        <li class="mb-2"><a href="{{ url_for('about') }}" class="text-light text-decoration-none hover-primary"><i class="bi bi-chevron-right me-1 text-primary"></i> About & Methodology</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-6">
+                    <h6 class="text-white-50 text-uppercase fw-semibold mb-3">Project Metadata</h6>
+                    <ul class="list-unstyled small text-light-50">
+                        <li class="mb-2"><strong class="text-white">Degree:</strong> BSc Computer Science (AI)</li>
+                        <li class="mb-2"><strong class="text-white">Domain:</strong> Machine Learning & Web Engineering</li>
+                        <li class="mb-2"><strong class="text-white">Algorithms:</strong> Random Forest & Linear Regression</li>
+                        <li class="mb-2"><strong class="text-white">Status:</strong> Fully Functional & Verified</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="border-secondary my-3">
+            <div class="row align-items-center small text-light-50">
+                <div class="col-md-6 text-center text-md-start">
+                    &copy; {{ current_year }} Student Performance Prediction System. Final Year AI Project.
+                </div>
+                <div class="col-md-6 text-center text-md-end mt-2 mt-md-0">
+                    <span class="badge bg-dark-subtle border border-secondary text-light">Built with Python & Flask</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom Scripts -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

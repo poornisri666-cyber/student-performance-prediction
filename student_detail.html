@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Student Profile - {{ student.student_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb & Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('students') }}" class="text-decoration-none">Student Records</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ student.student_name }}</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0">{{ student.student_name }}</h2>
+        </div>
+        <div class="d-flex gap-2 mt-3 mt-md-0">
+            <a href="{{ url_for('result', student_pk=student.id) }}" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-file-earmark-text me-1"></i> Result View
+            </a>
+            <a href="{{ url_for('students') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left me-1"></i> Back to Directory
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Profile Overview Card -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 text-center p-4 h-100 bg-white">
+                <div class="card-body p-0">
+                    <div class="student-avatar-circle mx-auto mb-3 bg-primary-subtle text-primary fw-bold display-6 d-flex align-items-center justify-content-center rounded-circle">
+                        {{ student.student_name[0] }}
+                    </div>
+                    <h4 class="fw-bold mb-1">{{ student.student_name }}</h4>
+                    <p class="font-monospace text-primary fw-semibold mb-3">{{ student.student_id }}</p>
+
+                    <div class="d-flex justify-content-center gap-2 mb-4">
+                        <span class="badge bg-{{ badge_class }} fs-7 px-3 py-2 rounded-pill">
+                            {{ student.performance_category }}
+                        </span>
+                        <span class="badge bg-dark-subtle text-dark fs-7 px-3 py-2 rounded-pill">
+                            {{ student.risk_level }}
+                        </span>
+                    </div>
+
+                    <div class="p-3 bg-light rounded-4 border mb-4">
+                        <div class="text-muted small text-uppercase fw-semibold mb-1">Predicted Final Score</div>
+                        <div class="display-4 fw-bold text-{{ badge_class }}">
+                            {{ "%.2f"|format(student.predicted_marks) }}%
+                        </div>
+                        <div class="small text-muted">Estimated Academic Standing</div>
+                    </div>
+
+                    <div class="text-start small text-muted">
+                        <div class="d-flex justify-content-between py-1 border-bottom">
+                            <span>Record ID:</span>
+                            <span class="fw-semibold text-dark">#{{ student.id }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between py-1">
+                            <span>Assessment Date:</span>
+                            <span class="fw-semibold text-dark">{{ student.created_at }}</span>
+                        </div>
+                    </div>
+
+                    <form action="{{ url_for('delete_student', student_pk=student.id) }}" method="POST" class="mt-4" onsubmit="return confirm('Are you sure you want to permanently delete this record?');">
+                        <button type="submit" class="btn btn-outline-danger w-100 btn-sm">
+                            <i class="bi bi-trash me-1"></i> Delete Record
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Academic Factors Breakdown -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+                <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                    <i class="bi bi-bar-chart-steps text-primary"></i> Academic Parameters & Benchmarks
+                </h5>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="fw-semibold small"><i class="bi bi-calendar-check text-primary me-1"></i> Attendance Percentage</span>
+                                <span class="fw-bold {{ 'text-success' if student.attendance >= 75 else 'text-danger' }}">{{ "%.1f"|format(student.attendance) }}%</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar {{ 'bg-success' if student.attendance >= 75 else 'bg-danger' }}" style="width: {{ student.attendance }}%"></div>
+                            </div>
+                            <div class="text-muted small mt-1">Minimum requirement: 75%</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="fw-semibold small"><i class="bi bi-clock-history text-primary me-1"></i> Daily Study Hours</span>
+                                <span class="fw-bold text-dark">{{ "%.1f"|format(student.study_hours) }} hrs/day</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-info" style="width: {{ (student.study_hours / 12 * 100)|round }}%"></div>
+                            </div>
+                            <div class="text-muted small mt-1">Recommended target: 3.5 – 5.0 hrs/day</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="fw-semibold small"><i class="bi bi-award text-primary me-1"></i> Internal Assessment</span>
+                                <span class="fw-bold text-dark">{{ "%.1f"|format(student.internal_marks) }}/100</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-primary" style="width: {{ student.internal_marks }}%"></div>
+                            </div>
+                            <div class="text-muted small mt-1">Midterm exams & tests</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="fw-semibold small"><i class="bi bi-file-earmark-check text-primary me-1"></i> Assignment Performance</span>
+                                <span class="fw-bold text-dark">{{ "%.1f"|format(student.assignment_marks) }}/100</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-primary" style="width: {{ student.assignment_marks }}%"></div>
+                            </div>
+                            <div class="text-muted small mt-1">Continuous homework & practicals</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="fw-semibold small"><i class="bi bi-graph-up text-primary me-1"></i> Previous Semester Marks</span>
+                                <span class="fw-bold text-dark">{{ "%.1f"|format(student.previous_marks) }}/100</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-secondary" style="width: {{ student.previous_marks }}%"></div>
+                            </div>
+                            <div class="text-muted small mt-1">Baseline prior academic record</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="fw-semibold small"><i class="bi bi-trophy text-primary me-1"></i> Activity / Seminar Score</span>
+                                <span class="fw-bold text-dark">{{ "%.1f"|format(student.activity_score) }}/100</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-warning" style="width: {{ student.activity_score }}%"></div>
+                            </div>
+                            <div class="text-muted small mt-1">Participation & engagement</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendation box -->
+                <div class="card border-0 bg-light rounded-4 p-3 border-start border-4 border-{{ badge_class }}">
+                    <h6 class="fw-bold text-dark mb-2"><i class="bi bi-lightbulb text-warning me-1"></i> AI Improvement Guidance</h6>
+                    <p class="mb-0 text-muted small" style="line-height: 1.6;">
+                        {{ student.recommendation }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

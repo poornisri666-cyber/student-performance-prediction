@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction Result - {{ student.student_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb & Top Actions -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('predict') }}" class="text-decoration-none">Predict</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Prediction Result</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0">Performance Evaluation Report</h2>
+        </div>
+        <div class="d-flex gap-2 mt-3 mt-md-0">
+            <button onclick="window.print()" class="btn btn-outline-secondary btn-sm shadow-sm d-none d-md-inline-flex align-items-center gap-1">
+                <i class="bi bi-printer"></i> Print / Export Report
+            </button>
+            <a href="{{ url_for('predict') }}" class="btn btn-primary btn-sm shadow-sm d-inline-flex align-items-center gap-1">
+                <i class="bi bi-plus-circle"></i> Predict Another Student
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Result Card -->
+    <div class="row g-4 justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden printable-card">
+                <!-- Card Header -->
+                <div class="card-header bg-dark text-white p-4 d-flex flex-wrap justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-secondary text-uppercase mb-2">Student Academic Assessment</span>
+                        <h3 class="fw-bold mb-1 text-white">{{ student.student_name }}</h3>
+                        <div class="text-light-80 small d-flex gap-3">
+                            <span><i class="bi bi-person-vcard me-1"></i> ID: <strong>{{ student.student_id }}</strong></span>
+                            <span><i class="bi bi-calendar-event me-1"></i> Date: {{ student.created_at }}</span>
+                            <span><i class="bi bi-database-check text-success me-1"></i> Record Stored #{{ student.id }}</span>
+                        </div>
+                    </div>
+                    <div class="mt-3 mt-md-0 text-md-end">
+                        <span class="badge bg-{{ badge_class }} fs-6 px-3 py-2 rounded-pill shadow-sm">
+                            <i class="bi bi-shield-check me-1"></i> {{ student.performance_category }} Category
+                        </span>
+                        <div class="small mt-1 text-light-80">Risk Level: <strong>{{ student.risk_level }}</strong></div>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <!-- Predicted Score Big Gauge Section -->
+                    <div class="row align-items-center g-4 mb-5 pb-4 border-bottom">
+                        <div class="col-md-5 text-center">
+                            <div class="score-circle-wrapper mx-auto mb-2 border border-4 border-{{ badge_class }} bg-light rounded-circle d-flex flex-column justify-content-center align-items-center shadow-sm">
+                                <span class="text-muted small text-uppercase fw-semibold">Predicted Final Score</span>
+                                <div class="display-3 fw-bold text-{{ badge_class }} my-1">
+                                    {{ "%.2f"|format(student.predicted_marks) }}
+                                </div>
+                                <span class="text-muted small">out of 100.0 Marks</span>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <h4 class="fw-bold mb-2">Performance Assessment Summary</h4>
+                            <p class="text-muted mb-3">
+                                Based on academic indicators and historical trends processed by our trained Machine Learning regression algorithm, <strong>{{ student.student_name }}</strong> is forecasted to achieve approximately <strong>{{ "%.2f"|format(student.predicted_marks) }}%</strong> in the final semester evaluation.
+                            </p>
+                            
+                            <div class="progress mb-2" style="height: 12px;">
+                                <div class="progress-bar bg-{{ badge_class }} progress-bar-striped progress-bar-animated" role="progressbar" style="width: {{ student.predicted_marks }}%" aria-valuenow="{{ student.predicted_marks }}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between small text-muted">
+                                <span>0% (Fail)</span>
+                                <span>50% (Pass)</span>
+                                <span>75% (Distinction)</span>
+                                <span>100%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Parameters Breakdown -->
+                    <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                        <i class="bi bi-sliders text-primary"></i> Academic Input Parameters Breakdown
+                    </h5>
+                    
+                    <div class="row g-3 mb-5">
+                        <div class="col-6 col-md-4">
+                            <div class="p-3 bg-light rounded-3 border h-100">
+                                <div class="text-muted small mb-1"><i class="bi bi-calendar-check text-primary me-1"></i> Attendance</div>
+                                <div class="fs-4 fw-bold text-dark">{{ "%.1f"|format(student.attendance) }}%</div>
+                                <div class="progress mt-2" style="height: 6px;">
+                                    <div class="progress-bar {{ 'bg-success' if student.attendance >= 75 else 'bg-danger' }}" style="width: {{ student.attendance }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-md-4">
+                            <div class="p-3 bg-light rounded-3 border h-100">
+                                <div class="text-muted small mb-1"><i class="bi bi-award text-primary me-1"></i> Internal Assessment</div>
+                                <div class="fs-4 fw-bold text-dark">{{ "%.1f"|format(student.internal_marks) }} / 100</div>
+                                <div class="progress mt-2" style="height: 6px;">
+                                    <div class="progress-bar {{ 'bg-success' if student.internal_marks >= 60 else 'bg-warning' }}" style="width: {{ student.internal_marks }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-md-4">
+                            <div class="p-3 bg-light rounded-3 border h-100">
+                                <div class="text-muted small mb-1"><i class="bi bi-file-earmark-check text-primary me-1"></i> Assignments</div>
+                                <div class="fs-4 fw-bold text-dark">{{ "%.1f"|format(student.assignment_marks) }} / 100</div>
+                                <div class="progress mt-2" style="height: 6px;">
+                                    <div class="progress-bar {{ 'bg-success' if student.assignment_marks >= 60 else 'bg-warning' }}" style="width: {{ student.assignment_marks }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-md-4">
+                            <div class="p-3 bg-light rounded-3 border h-100">
+                                <div class="text-muted small mb-1"><i class="bi bi-graph-up text-primary me-1"></i> Previous Semester</div>
+                                <div class="fs-4 fw-bold text-dark">{{ "%.1f"|format(student.previous_marks) }} / 100</div>
+                                <div class="progress mt-2" style="height: 6px;">
+                                    <div class="progress-bar {{ 'bg-success' if student.previous_marks >= 60 else 'bg-warning' }}" style="width: {{ student.previous_marks }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-md-4">
+                            <div class="p-3 bg-light rounded-3 border h-100">
+                                <div class="text-muted small mb-1"><i class="bi bi-clock-history text-primary me-1"></i> Daily Study Hours</div>
+                                <div class="fs-4 fw-bold text-dark">{{ "%.1f"|format(student.study_hours) }} hrs/day</div>
+                                <div class="progress mt-2" style="height: 6px;">
+                                    <div class="progress-bar bg-info" style="width: {{ (student.study_hours / 12 * 100)|round }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-md-4">
+                            <div class="p-3 bg-light rounded-3 border h-100">
+                                <div class="text-muted small mb-1"><i class="bi bi-trophy text-primary me-1"></i> Activity & Engagement</div>
+                                <div class="fs-4 fw-bold text-dark">{{ "%.1f"|format(student.activity_score) }} / 100</div>
+                                <div class="progress mt-2" style="height: 6px;">
+                                    <div class="progress-bar bg-primary" style="width: {{ student.activity_score }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Recommendation Box -->
+                    <div class="card border-0 rounded-4 bg-{{ badge_class }}-subtle p-4 mb-4 border-start border-5 border-{{ badge_class }}">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="fs-2 text-{{ badge_class }}">
+                                <i class="bi bi-lightbulb-fill"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold text-{{ badge_class }}-emphasis mb-2">AI Guidance & Actionable Recommendations</h5>
+                                <p class="mb-0 text-dark fs-6" style="line-height: 1.6;">
+                                    {{ student.recommendation }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer Action Buttons -->
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 pt-3 border-top">
+                        <div class="d-flex gap-2 flex-wrap">
+                            <a href="{{ url_for('predict') }}" class="btn btn-primary px-4 fw-bold shadow-sm">
+                                <i class="bi bi-plus-circle me-1"></i> Predict Another Student
+                            </a>
+                            <a href="{{ url_for('students') }}" class="btn btn-outline-dark px-3">
+                                <i class="bi bi-people me-1"></i> View All Records
+                            </a>
+                            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-success px-3">
+                                <i class="bi bi-speedometer2 me-1"></i> Open Dashboard
+                            </a>
+                        </div>
+                        <span class="text-muted small">
+                            <i class="bi bi-check-all text-success"></i> Auto-saved to SQLite Database
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

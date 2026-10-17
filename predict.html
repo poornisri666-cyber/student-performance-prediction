@@ -1,0 +1,370 @@
+{% extends "base.html" %}
+
+{% block title %}Predict Student Performance{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header Breadcrumb & Title -->
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-2">
+                    <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Predict Performance</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold d-flex align-items-center gap-2">
+                <i class="bi bi-cpu-fill text-primary"></i>
+                Student Performance Prediction
+            </h2>
+            <p class="text-muted">
+                Enter student academic credentials below. The trained AI regression model will forecast final marks and generate tailored guidance.
+            </p>
+        </div>
+        <div class="col-lg-4 text-lg-end d-flex align-items-center justify-content-lg-end gap-2 mt-3 mt-lg-0">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-speedometer2 me-1"></i> Dashboard
+            </a>
+            <a href="{{ url_for('students') }}" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-people me-1"></i> All Records
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Main Form Column -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-primary text-white py-3 px-4 d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-pencil-square fs-5"></i>
+                        <span class="fw-bold">Student Academic Information Form</span>
+                    </div>
+                    <span class="badge bg-white text-primary fw-semibold">All fields required</span>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- Quick Autofill Helper for Testing / Demo -->
+                    <div class="p-3 mb-4 rounded-3 bg-light border d-flex flex-wrap align-items-center justify-content-between gap-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-magic text-warning fs-5"></i>
+                            <span class="small fw-semibold text-muted">Quick Demo Autofill:</span>
+                        </div>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-outline-success" onclick="autofillDemo('excellent')">
+                                <i class="bi bi-star-fill me-1"></i> Excellent Profile
+                            </button>
+                            <button type="button" class="btn btn-outline-warning" onclick="autofillDemo('average')">
+                                <i class="bi bi-dash-circle me-1"></i> Average Profile
+                            </button>
+                            <button type="button" class="btn btn-outline-danger" onclick="autofillDemo('at_risk')">
+                                <i class="bi bi-exclamation-triangle-fill me-1"></i> At-Risk Profile
+                            </button>
+                        </div>
+                    </div>
+
+                    <form action="{{ url_for('predict') }}" method="POST" id="predictionForm" novalidate>
+                        <!-- Basic Student Info Row -->
+                        <h6 class="text-uppercase text-muted fw-bold small mb-3 border-bottom pb-2">
+                            <i class="bi bi-person-badge me-1"></i> 1. Student Identification
+                        </h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label for="student_name" class="form-label fw-semibold">
+                                    Student Full Name <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-person text-muted"></i></span>
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        id="student_name" 
+                                        name="student_name" 
+                                        placeholder="e.g. John Doe"
+                                        value="{{ form_data.get('student_name', '') }}" 
+                                        required
+                                    >
+                                </div>
+                                <div class="form-text small text-muted">Enter complete student name.</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="student_id" class="form-label fw-semibold">
+                                    Student ID / Roll No. <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-hash text-muted"></i></span>
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        id="student_id" 
+                                        name="student_id" 
+                                        placeholder="e.g. CS2026-101"
+                                        value="{{ form_data.get('student_id', '') }}" 
+                                        required
+                                    >
+                                </div>
+                                <div class="form-text small text-muted">Unique institutional registration number.</div>
+                            </div>
+                        </div>
+
+                        <!-- Academic Marks & Attendance -->
+                        <h6 class="text-uppercase text-muted fw-bold small mb-3 border-bottom pb-2">
+                            <i class="bi bi-journal-check me-1"></i> 2. Academic Performance & Habit Metrics
+                        </h6>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="attendance" class="form-label fw-semibold d-flex justify-content-between">
+                                    <span>Attendance Percentage (%) <span class="text-danger">*</span></span>
+                                    <span class="text-muted small fw-normal">0 - 100%</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-calendar-check text-muted"></i></span>
+                                    <input 
+                                        type="number" 
+                                        step="0.1" 
+                                        min="0" 
+                                        max="100" 
+                                        class="form-control" 
+                                        id="attendance" 
+                                        name="attendance" 
+                                        placeholder="e.g. 85.0" 
+                                        value="{{ form_data.get('attendance', '') }}" 
+                                        required
+                                    >
+                                    <span class="input-group-text bg-light text-muted">%</span>
+                                </div>
+                                <div class="form-text small text-muted">Total lecture & lab attendance rate.</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="study_hours" class="form-label fw-semibold d-flex justify-content-between">
+                                    <span>Daily Study Hours <span class="text-danger">*</span></span>
+                                    <span class="text-muted small fw-normal">0 - 24 hrs</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-clock-history text-muted"></i></span>
+                                    <input 
+                                        type="number" 
+                                        step="0.1" 
+                                        min="0" 
+                                        max="24" 
+                                        class="form-control" 
+                                        id="study_hours" 
+                                        name="study_hours" 
+                                        placeholder="e.g. 4.5" 
+                                        value="{{ form_data.get('study_hours', '') }}" 
+                                        required
+                                    >
+                                    <span class="input-group-text bg-light text-muted">hrs/day</span>
+                                </div>
+                                <div class="form-text small text-muted">Self-study and revision time outside lectures.</div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="internal_marks" class="form-label fw-semibold d-flex justify-content-between">
+                                    <span>Internal Assessment Marks <span class="text-danger">*</span></span>
+                                    <span class="text-muted small fw-normal">0 - 100</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-award text-muted"></i></span>
+                                    <input 
+                                        type="number" 
+                                        step="0.1" 
+                                        min="0" 
+                                        max="100" 
+                                        class="form-control" 
+                                        id="internal_marks" 
+                                        name="internal_marks" 
+                                        placeholder="e.g. 78.0" 
+                                        value="{{ form_data.get('internal_marks', '') }}" 
+                                        required
+                                    >
+                                    <span class="input-group-text bg-light text-muted">/100</span>
+                                </div>
+                                <div class="form-text small text-muted">Mid-term exam or continuous assessment score.</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="assignment_marks" class="form-label fw-semibold d-flex justify-content-between">
+                                    <span>Assignment Marks <span class="text-danger">*</span></span>
+                                    <span class="text-muted small fw-normal">0 - 100</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-file-earmark-check text-muted"></i></span>
+                                    <input 
+                                        type="number" 
+                                        step="0.1" 
+                                        min="0" 
+                                        max="100" 
+                                        class="form-control" 
+                                        id="assignment_marks" 
+                                        name="assignment_marks" 
+                                        placeholder="e.g. 82.5" 
+                                        value="{{ form_data.get('assignment_marks', '') }}" 
+                                        required
+                                    >
+                                    <span class="input-group-text bg-light text-muted">/100</span>
+                                </div>
+                                <div class="form-text small text-muted">Coursework, homework, and practical grades.</div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label for="previous_marks" class="form-label fw-semibold d-flex justify-content-between">
+                                    <span>Previous Semester Marks <span class="text-danger">*</span></span>
+                                    <span class="text-muted small fw-normal">0 - 100</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-graph-up text-muted"></i></span>
+                                    <input 
+                                        type="number" 
+                                        step="0.1" 
+                                        min="0" 
+                                        max="100" 
+                                        class="form-control" 
+                                        id="previous_marks" 
+                                        name="previous_marks" 
+                                        placeholder="e.g. 75.0" 
+                                        value="{{ form_data.get('previous_marks', '') }}" 
+                                        required
+                                    >
+                                    <span class="input-group-text bg-light text-muted">/100</span>
+                                </div>
+                                <div class="form-text small text-muted">Historical GPA or prior semester final percentage.</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="activity_score" class="form-label fw-semibold d-flex justify-content-between">
+                                    <span>Participation / Activity Score <span class="text-danger">*</span></span>
+                                    <span class="text-muted small fw-normal">0 - 100</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-trophy text-muted"></i></span>
+                                    <input 
+                                        type="number" 
+                                        step="0.1" 
+                                        min="0" 
+                                        max="100" 
+                                        class="form-control" 
+                                        id="activity_score" 
+                                        name="activity_score" 
+                                        placeholder="e.g. 80.0" 
+                                        value="{{ form_data.get('activity_score', '') }}" 
+                                        required
+                                    >
+                                    <span class="input-group-text bg-light text-muted">/100</span>
+                                </div>
+                                <div class="form-text small text-muted">Extracurricular, lab engagement & seminar participation.</div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex flex-wrap gap-3 pt-3 border-top">
+                            <button type="submit" class="btn btn-primary btn-lg px-4 fw-bold shadow-sm d-flex align-items-center gap-2" id="btnPredict">
+                                <i class="bi bi-lightning-charge-fill"></i> Predict Performance
+                            </button>
+                            <button type="reset" class="btn btn-outline-secondary btn-lg px-4" onclick="document.getElementById('predictionForm').reset();">
+                                <i class="bi bi-arrow-counterclockwise"></i> Reset Form
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Info Column -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-3 mb-4 bg-white">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                        <i class="bi bi-info-circle-fill text-primary"></i>
+                        Grading & Risk Criteria
+                    </h5>
+                    <ul class="list-group list-group-flush small">
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                            <div>
+                                <span class="badge bg-success me-2">75 – 100</span>
+                                <strong>Excellent</strong>
+                            </div>
+                            <span class="text-success fw-semibold">Low Risk</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                            <div>
+                                <span class="badge bg-info text-dark me-2">60 – 74</span>
+                                <strong>Good</strong>
+                            </div>
+                            <span class="text-info fw-semibold">Low Risk</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                            <div>
+                                <span class="badge bg-warning text-dark me-2">50 – 59</span>
+                                <strong>Average</strong>
+                            </div>
+                            <span class="text-warning-emphasis fw-semibold">Medium Risk</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                            <div>
+                                <span class="badge bg-danger me-2">&lt; 50</span>
+                                <strong>At Risk</strong>
+                            </div>
+                            <span class="text-danger fw-semibold">High Risk</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 p-3 bg-light">
+                <div class="card-body">
+                    <h6 class="fw-bold text-dark mb-2"><i class="bi bi-shield-check text-success me-1"></i> Data Quality Constraints</h6>
+                    <p class="small text-muted mb-2">
+                        Every input is checked with both client and server validation. Percentage & mark fields are strictly restricted between <strong>0.0 and 100.0</strong>, and daily study hours between <strong>0.0 and 24.0</strong>.
+                    </p>
+                    <p class="small text-muted mb-0">
+                        Predictions are computed using the live trained Machine Learning model serialized with Joblib.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function autofillDemo(type) {
+    if (type === 'excellent') {
+        document.getElementById('student_name').value = 'Aditi Rao';
+        document.getElementById('student_id').value = 'AI2026-EX88';
+        document.getElementById('attendance').value = '92.5';
+        document.getElementById('study_hours').value = '5.5';
+        document.getElementById('internal_marks').value = '86.0';
+        document.getElementById('assignment_marks').value = '88.0';
+        document.getElementById('previous_marks').value = '85.0';
+        document.getElementById('activity_score').value = '90.0';
+    } else if (type === 'average') {
+        document.getElementById('student_name').value = 'Manish Verma';
+        document.getElementById('student_id').value = 'AI2026-AV42';
+        document.getElementById('attendance').value = '68.0';
+        document.getElementById('study_hours').value = '2.5';
+        document.getElementById('internal_marks').value = '54.0';
+        document.getElementById('assignment_marks').value = '56.0';
+        document.getElementById('previous_marks').value = '58.0';
+        document.getElementById('activity_score').value = '62.0';
+    } else if (type === 'at_risk') {
+        document.getElementById('student_name').value = 'Rajesh Kumar';
+        document.getElementById('student_id').value = 'AI2026-RS19';
+        document.getElementById('attendance').value = '46.0';
+        document.getElementById('study_hours').value = '1.0';
+        document.getElementById('internal_marks').value = '38.0';
+        document.getElementById('assignment_marks').value = '42.0';
+        document.getElementById('previous_marks').value = '45.0';
+        document.getElementById('activity_score').value = '35.0';
+    }
+}
+</script>
+{% endblock %}

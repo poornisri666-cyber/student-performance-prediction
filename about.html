@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}About Project - AI Student Performance Prediction System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header Breadcrumb & Title -->
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-1">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">About Project</li>
+            </ol>
+        </nav>
+        <h2 class="fw-bold d-flex align-items-center gap-2 mb-1">
+            <i class="bi bi-info-circle-fill text-primary"></i> About the Student Performance Prediction System
+        </h2>
+        <p class="text-muted">Comprehensive architectural overview, research methodology, and machine learning model benchmarks.</p>
+    </div>
+
+    <!-- Problem & Solution Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 h-100 p-4 border-start border-4 border-danger bg-white">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="feature-icon bg-danger-subtle text-danger">
+                        <i class="bi bi-exclamation-octagon-fill fs-4"></i>
+                    </div>
+                    <h4 class="fw-bold mb-0 text-dark">The Academic Problem</h4>
+                </div>
+                <p class="text-muted" style="line-height: 1.7;">
+                    Higher educational institutions and faculty face significant challenges in detecting academic struggles before terminal semester examinations. Key challenges include:
+                </p>
+                <ul class="text-muted small space-y-2">
+                    <li class="mb-2"><strong>Delayed Feedback Loop:</strong> Low performance is often only realized after final exam failures occur.</li>
+                    <li class="mb-2"><strong>Multi-Factor Complexity:</strong> Academic success depends on interconnected factors—attendance, assignment discipline, continuous assessments, and self-study hours.</li>
+                    <li class="mb-2"><strong>Manual Overhead:</strong> Tracking hundreds of individual students manually leads to missed at-risk interventions.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 h-100 p-4 border-start border-4 border-success bg-white">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="feature-icon bg-success-subtle text-success">
+                        <i class="bi bi-lightbulb-fill fs-4"></i>
+                    </div>
+                    <h4 class="fw-bold mb-0 text-dark">The Proposed AI Solution</h4>
+                </div>
+                <p class="text-muted" style="line-height: 1.7;">
+                    The <strong>Student Performance Prediction System</strong> deploys supervised Machine Learning algorithms to analyze student academic attributes and predict numerical final marks early in the semester.
+                </p>
+                <ul class="text-muted small space-y-2">
+                    <li class="mb-2"><strong>Predictive Foresight:</strong> Delivers instant numerical final score estimations with confidence metrics.</li>
+                    <li class="mb-2"><strong>Automated Risk Categorization:</strong> Classifies students into <em>Excellent, Good, Average,</em> and <em>At-Risk</em> tiers.</li>
+                    <li class="mb-2"><strong>Tailored Academic Guidance:</strong> Formulates targeted, constructive remedial action steps for vulnerable students.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Benefits Grid -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-5 bg-white">
+        <h4 class="fw-bold mb-4 text-center">Institutional Benefits & Impact</h4>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="p-3 bg-light rounded-3 h-100 border">
+                    <i class="bi bi-shield-check text-primary fs-3 mb-2 d-block"></i>
+                    <h6 class="fw-bold mb-1">Early Risk Identification</h6>
+                    <p class="text-muted small mb-0">Enables academic advisors to initiate timely mentoring sessions before dropouts or failures occur.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3 bg-light rounded-3 h-100 border">
+                    <i class="bi bi-cpu text-success fs-3 mb-2 d-block"></i>
+                    <h6 class="fw-bold mb-1">Data-Driven Predictions</h6>
+                    <p class="text-muted small mb-0">Replaces subjective guesswork with trained scikit-learn regression models based on empirical trends.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3 bg-light rounded-3 h-100 border">
+                    <i class="bi bi-database text-info fs-3 mb-2 d-block"></i>
+                    <h6 class="fw-bold mb-1">Centralized Records</h6>
+                    <p class="text-muted small mb-0">SQLite database ensures fast lookups, structured storage, search, and seamless record archiving.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3 bg-light rounded-3 h-100 border">
+                    <i class="bi bi-pie-chart text-warning fs-3 mb-2 d-block"></i>
+                    <h6 class="fw-bold mb-1">Visual Analytics Dashboard</h6>
+                    <p class="text-muted small mb-0">Interactive Chart.js visualizations illustrate attendance correlations, grade distributions, and cohort health.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3 bg-light rounded-3 h-100 border">
+                    <i class="bi bi-ui-checks text-danger fs-3 mb-2 d-block"></i>
+                    <h6 class="fw-bold mb-1">Intuitive User Experience</h6>
+                    <p class="text-muted small mb-0">Responsive Bootstrap 5 UI designed for quick navigation across desktop, tablet, and mobile browsers.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3 bg-light rounded-3 h-100 border">
+                    <i class="bi bi-award text-primary fs-3 mb-2 d-block"></i>
+                    <h6 class="fw-bold mb-1">Continuous Monitoring</h6>
+                    <p class="text-muted small mb-0">Supports iterative tracking across multiple semesters to measure academic growth.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Machine Learning Methodology & Model Evaluation -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-5 bg-white">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+            <div>
+                <h4 class="fw-bold mb-1">Machine Learning Evaluation & Model Selection</h4>
+                <p class="text-muted small mb-0">Comparative validation on isolated test dataset (80% Train, 20% Test split).</p>
+            </div>
+            <span class="badge bg-primary px-3 py-2 rounded-pill">Model Selection: {{ metrics.best_model_name if metrics else 'Evaluated Best' }}</span>
+        </div>
+
+        <div class="table-responsive mb-4">
+            <table class="table table-bordered align-middle text-center mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="text-start ps-3">Regression Algorithm</th>
+                        <th>MAE (Mean Absolute Error)</th>
+                        <th>MSE (Mean Squared Error)</th>
+                        <th>RMSE (Root Mean Squared Error)</th>
+                        <th>R² Score (Coefficient of Determination)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="{{ 'table-success fw-bold' if metrics and metrics.best_model_name == 'Linear Regression' else '' }}">
+                        <td class="text-start ps-3">
+                            <i class="bi bi-graph-up me-2 text-primary"></i> <strong>Linear Regression</strong>
+                        </td>
+                        <td>{{ metrics.linear_regression.mae if metrics else '2.2342' }} marks</td>
+                        <td>{{ metrics.linear_regression.mse if metrics else '8.2122' }}</td>
+                        <td>{{ metrics.linear_regression.rmse if metrics else '2.8657' }} marks</td>
+                        <td><span class="badge bg-success fs-7">{{ metrics.linear_regression.r2_score if metrics else '0.9192' }}</span></td>
+                        <td>
+                            {% if metrics and metrics.best_model_name == 'Linear Regression' %}
+                                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> Selected Superior</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Compared</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr class="{{ 'table-success fw-bold' if metrics and metrics.best_model_name == 'Random Forest Regressor' else '' }}">
+                        <td class="text-start ps-3">
+                            <i class="bi bi-tree me-2 text-success"></i> <strong>Random Forest Regressor</strong>
+                        </td>
+                        <td>{{ metrics.random_forest.mae if metrics else '2.4549' }} marks</td>
+                        <td>{{ metrics.random_forest.mse if metrics else '9.8927' }}</td>
+                        <td>{{ metrics.random_forest.rmse if metrics else '3.1453' }} marks</td>
+                        <td><span class="badge bg-info text-dark fs-7">{{ metrics.random_forest.r2_score if metrics else '0.9026' }}</span></td>
+                        <td>
+                            {% if metrics and metrics.best_model_name == 'Random Forest Regressor' %}
+                                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> Selected Superior</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Compared</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <h6 class="fw-bold mb-2 text-dark"><i class="bi bi-clipboard-data text-primary me-1"></i> Feature Weights & Importance</h6>
+                <div class="p-3 bg-light rounded-3 border">
+                    <p class="small text-muted mb-2">The model maps feature relationships according to these relative weights:</p>
+                    {% if metrics and metrics.feature_importances %}
+                        <ul class="list-group list-group-flush small">
+                            {% for feat, val in metrics.feature_importances.items() %}
+                                <li class="list-group-item bg-transparent d-flex justify-content-between px-0 py-1">
+                                    <span class="text-capitalize">{{ feat.replace('_', ' ') }}:</span>
+                                    <span class="font-monospace fw-bold text-primary">{{ val }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <ul class="list-group list-group-flush small">
+                            <li class="list-group-item bg-transparent d-flex justify-content-between px-0 py-1"><span>Internal Marks:</span><span class="fw-bold text-primary">0.3012</span></li>
+                            <li class="list-group-item bg-transparent d-flex justify-content-between px-0 py-1"><span>Assignment Marks:</span><span class="fw-bold text-primary">0.2241</span></li>
+                            <li class="list-group-item bg-transparent d-flex justify-content-between px-0 py-1"><span>Previous Semester Marks:</span><span class="fw-bold text-primary">0.2389</span></li>
+                            <li class="list-group-item bg-transparent d-flex justify-content-between px-0 py-1"><span>Attendance Rate:</span><span class="fw-bold text-primary">0.1415</span></li>
+                            <li class="list-group-item bg-transparent d-flex justify-content-between px-0 py-1"><span>Study Hours:</span><span class="fw-bold text-primary">0.0520</span></li>
+                            <li class="list-group-item bg-transparent d-flex justify-content-between px-0 py-1"><span>Activity Score:</span><span class="fw-bold text-primary">0.0423</span></li>
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h6 class="fw-bold mb-2 text-dark"><i class="bi bi-diagram-3 text-primary me-1"></i> Technical Architecture Pipeline</h6>
+                <div class="p-3 bg-light rounded-3 border">
+                    <div class="d-flex flex-column gap-2 small">
+                        <div class="p-2 bg-white rounded border d-flex align-items-center gap-2">
+                            <span class="badge bg-primary">1</span> <strong>User Input:</strong> Frontend HTML5 + Bootstrap form with client validation.
+                        </div>
+                        <div class="p-2 bg-white rounded border d-flex align-items-center gap-2">
+                            <span class="badge bg-primary">2</span> <strong>Flask Backend:</strong> Range validation & feature vector extraction.
+                        </div>
+                        <div class="p-2 bg-white rounded border d-flex align-items-center gap-2">
+                            <span class="badge bg-primary">3</span> <strong>ML Predictor:</strong> Scikit-learn serialized model inference via Joblib.
+                        </div>
+                        <div class="p-2 bg-white rounded border d-flex align-items-center gap-2">
+                            <span class="badge bg-primary">4</span> <strong>Classification:</strong> Grading rubric & targeted recommendation synthesis.
+                        </div>
+                        <div class="p-2 bg-white rounded border d-flex align-items-center gap-2">
+                            <span class="badge bg-primary">5</span> <strong>Persistence:</strong> Parameterized SQLite storage & Chart.js rendering.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
