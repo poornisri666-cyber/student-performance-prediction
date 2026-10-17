@@ -1,0 +1,179 @@
+/* 
+ * Student Performance Prediction System
+ * Custom Styling & Modern Component Design
+ */
+
+:root {
+    --bs-primary: #1e40af;
+    --bs-primary-rgb: 30, 64, 175;
+    --bs-secondary: #475569;
+    --bs-success: #16a34a;
+    --bs-danger: #dc2626;
+    --bs-warning: #d97706;
+    --bs-info: #0284c7;
+    --bs-dark: #0f172a;
+    --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}
+
+body {
+    font-family: var(--font-main);
+    color: #1e293b;
+    background-color: #f8fafc;
+    -webkit-font-smoothing: antialiased;
+}
+
+.font-monospace {
+    font-family: var(--font-mono) !important;
+}
+
+/* Navbar */
+.navbar {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%) !important;
+}
+
+.brand-icon-wrapper {
+    background: rgba(255, 255, 255, 0.15);
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-link {
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: #fde047 !important;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1e40af 100%);
+    position: relative;
+}
+
+.hero-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.18) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.text-light-80 {
+    color: rgba(255, 255, 255, 0.82) !important;
+}
+
+.text-light-50 {
+    color: rgba(255, 255, 255, 0.55) !important;
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+}
+
+/* Cards & Hover Effects */
+.card {
+    border-radius: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.1) !important;
+}
+
+.hover-primary:hover {
+    color: var(--bs-primary) !important;
+}
+
+/* Feature Icons */
+.feature-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* KPI Cards */
+.kpi-card {
+    background-color: #ffffff;
+    transition: transform 0.2s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+}
+
+.kpi-icon-circle {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Prediction Score Circle Badge */
+.score-circle-wrapper {
+    width: 190px;
+    height: 190px;
+}
+
+.student-avatar-circle {
+    width: 80px;
+    height: 80px;
+}
+
+/* Form Styling */
+.form-control:focus, .form-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.18);
+}
+
+/* Table Styling */
+.table th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+/* Print Styles */
+@media print {
+    .navbar, footer, .btn, .breadcrumb, nav, .d-none-print {
+        display: none !important;
+    }
+    body {
+        background-color: #ffffff !important;
+        font-size: 12pt;
+    }
+    .printable-card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+}
